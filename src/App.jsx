@@ -54,7 +54,7 @@ getWeatherApi(e,setWetherProp)
 useEffect(()=>{
 {/*CoordinatesAPI */}
 try{
-if(localStorage.getItem("localCity") !== undefined){
+if(localStorage.getItem("localCity")){
 fetch(`https://us1.locationiq.com/v1/reverse.php?key=pk.c1726c6a2a12b42ad99a440efb52627d&lat=${Coordinates.latitude}&lon=${Coordinates.longitude}&format=json&accept-language=${localStorage.getItem("i18nextLng")||'en'}`).then((e)=>{
 return e.json()
 }).then(e=>{

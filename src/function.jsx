@@ -280,7 +280,6 @@ color:getHumidityColor(e)
 }
 }
 }
-console.log(object.more.hourly)
 setWetherProp(object)
 }).catch(()=>{
 setWetherProp({
