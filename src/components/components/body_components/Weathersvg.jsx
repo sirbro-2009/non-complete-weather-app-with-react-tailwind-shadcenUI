@@ -1,14 +1,14 @@
 // استيراد الأيقونات الرسمية الموحدة الحجم هندسياً
-import { Sun, Cloud,CloudSun, CloudRain, Snowflake, CloudLightning, HelpCircle } from 'lucide-react';
-export default function WeatherIcon({ code }) {
+import { Sun, Cloud,CloudSun, CloudRain, Snowflake, CloudLightning, HelpCircle,Moon,CloudMoon } from 'lucide-react';
+export default function WeatherIcon({ code ,is_Day}) {
   const iconClasses = "w-full h-full   text-white transition-all duration-1000  filter drop-shadow-[0_4px_12px_rgba(255,255,255,0.25)] stroke-[1.5]";
 
   switch (code) {
     case 0: 
-      return <Sun className={iconClasses} />;
+      return is_Day?<Sun className={iconClasses} />:<Moon className={iconClasses}/>;
 
     case 1: 
-      return <CloudSun className={iconClasses}></CloudSun>
+      return is_Day?<CloudSun className={iconClasses}></CloudSun>:<CloudMoon className={iconClasses}/>
 
     case 2: 
     case 3: 

@@ -17,15 +17,15 @@ catch{
 object = {}
 }
 function App() {
-let {t} = useTranslation()
-let [showAlert,setShowAlert] = useState(false)
-let [weatherProp,setWetherProp] = useState({
+const {t} = useTranslation()
+const [showAlert,setShowAlert] = useState(false)
+const [weatherProp,setWetherProp] = useState({
 weather_status:{
 value:''
 },
 })
-let [Coordinates,setCoordinates] = useState(object)
-let [res,setRes] = useState({results:[{
+const [Coordinates,setCoordinates] = useState(object)
+const [res,setRes] = useState({results:[{
 name:t("no_city"),
 id:null
 }]})
@@ -52,6 +52,7 @@ getWeatherApi(e,setWetherProp)
 },[])
 useEffect(()=>{
 {/*CoordinatesAPI */}
+try{
 if(localStorage.getItem("localCity") !== undefined){
 fetch(`https://us1.locationiq.com/v1/reverse.php?key=pk.c1726c6a2a12b42ad99a440efb52627d&lat=${Coordinates.latitude}&lon=${Coordinates.longitude}&format=json&accept-language=${localStorage.getItem("i18nextLng")||'en'}`).then((e)=>{
 return e.json()
@@ -63,17 +64,37 @@ let obj = {
 getWeatherApi(obj,setWetherProp)
 })
 }
-
-},[Coordinates.latitude,Coordinates.longitude])
+}
+catch(e){
+  console.log(e)
+}
+},[Coordinates])
 
 return (
 <>
 <SharProps.Provider value={{weatherProp,setWetherProp,Coordinates,setCoordinates,res,setRes,setShowAlert}}>
-    <div className={`bg-[#0B0F19] w-full  h-screen flex flex-col font-['Rubik']`}>
+<div className="min-h-screen bg-black w-full relative">
+  {/* Midnight Radial Glow Background */}
+  <div
+    className="absolute inset-0 z-0"
+    style={{
+      background: `
+        radial-gradient(circle at 50% 50%, 
+          rgba(226, 232, 240, 0.2) 0%, 
+          rgba(226, 232, 240, 0.1) 25%, 
+          rgba(226, 232, 240, 0.05) 35%, 
+          transparent 50%
+        )
+      `,
+    }}
+  />
+  {/* Your Content/Components */}
+    <div className={` w-full  h-screen flex flex-col font-['Rubik']`}>
       <Header></Header>
     {showAlert?<AlertDestructive></AlertDestructive>:``}
       <TheBody></TheBody>
     </div>
+</div>
 
 </SharProps.Provider>
 </>

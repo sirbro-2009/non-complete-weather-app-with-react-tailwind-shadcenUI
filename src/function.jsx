@@ -38,6 +38,13 @@ return {
   year:year
 }
 }
+let showAlertFunction = (setShowAlert)=>{
+setShowAlert(true)
+setInterval(() => {
+setShowAlert(false)
+}, 10000);
+
+}
 function fetchLocal(setShowAlert,setCoordinates,setWetherProp){
                       try{
                           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
@@ -49,11 +56,10 @@ function fetchLocal(setShowAlert,setCoordinates,setWetherProp){
                         else{
                             
                           navigator.geolocation.getCurrentPosition((pos)=>{
-                          console.log(pos)
                           fetch(`https://us1.locationiq.com/v1/reverse.php?key=pk.c1726c6a2a12b42ad99a440efb52627d&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&accept-language=${localStorage.getItem("i18nextLng")||'en'}`)
                           .then(
                           e=>{return e.json()}).then((e)=>{
-                            let object = {
+                            const object = {
                               country:e.address.country,
                               region:e.address.state,
                               city:e.address.city,
@@ -128,11 +134,25 @@ const getOWMIcon = (code) => {
   if (code <= 82) return "09d"   
   return "11d"                        
 }
+function isDay(e,sunrise,sunset){
+const hour = parseInt(e.split("T")[1].split(":")[0])
+const min = parseInt(e.split("T")[1].split(":")[1])
+const sunriseHour = parseInt(sunrise.split(":")[0])
+const sunriseMin = parseInt(sunrise.split(":")[1])
+const sunsetHour = parseInt(sunset.split(":")[0])
+const sunsetMin = parseInt(sunset.split(":")[1])
+if(hour >=sunriseHour  ){
+return true
+}
+if(hour <= sunsetHour){
+return false
+}
+}
 function getWeatherApi(e,setWetherProp){
 
 const currentHour = new Date().getHours()
-let {latitude,longitude} = e
-let link = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,visibility,precipitation_probability,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto&forecast_days=1`
+const {latitude,longitude} = e
+const link = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,visibility,weather_code,precipitation_probability,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto&forecast_days=1`
 fetch(link,{
 method: 'GET',
 cache: 'no-store',
@@ -140,7 +160,7 @@ cache: 'no-store',
 (e)=>{
   return e.json()
 }).then((data)=>{
-let object = {
+const object = {
 temperature :{
 emoji:Thermometer,
 value:parseInt(data.current_weather.temperature)+" ºC",
@@ -194,7 +214,6 @@ color:getVisibilityColor(data.hourly.visibility[currentHour])
 },
 apparent_temperature: {
     emoji: Sparkles, 
-    // جلبنا الحرارة المحسوسة من مصفوفة الـ hourly بناءً على الساعة الحالية
     value: parseInt(data.hourly.temperature_2m[currentHour]) + " ºC", 
     color: getTempColor(parseInt(data.hourly.temperature_2m[currentHour]))
   },
@@ -204,9 +223,39 @@ apparent_temperature: {
     color: "text-amber-500"
   },
 more:{
-
+is_Day:data.current_weather.is_day === 1?true:false,
+hourly:{
+/*temp */
+temperature:data.hourly.temperature_2m.map(e=>{return {
+value:parseInt(e)+" ºC",
+color:getTempColor(parseInt(e))
+}}),
+/*houres */
+time:data.hourly.time.map(e=>{
+  return {
+    hour:e.split("T")[1],
+    isDay:isDay(e,data.daily.sunrise[0].split("T")[1],data.daily.sunset[0].split("T")[1])
+  }
+}),
+/*weather state */
+weather_status:data.hourly.weather_code.map((e)=>{
+  return {
+    value:getState(e),
+    code:e,
+    color:getStateColor(e)
+  }
+}),
+/*r-h */
+Humidity:data.hourly.relative_humidity_2m.map((e)=>{
+return {
+value:e + " %",
+color:getHumidityColor(e)
+}
+})
 }
 }
+}
+console.log(object)
 setWetherProp(object)
 }).catch(()=>{
 setWetherProp({
@@ -217,4 +266,4 @@ error:true
 })
 })
 }
-export  {getHumidityColor,getVisibilityColor,getTempColor,getWindColor,getOWMIcon,getState,getStateColor,getWeatherApi,fetchLocal,getTime}
+export  {showAlertFunction,getHumidityColor,getVisibilityColor,getTempColor,getWindColor,getOWMIcon,getState,getStateColor,getWeatherApi,fetchLocal,getTime}

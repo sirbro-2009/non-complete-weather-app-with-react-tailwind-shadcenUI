@@ -14,7 +14,7 @@ import SharProps from "@/components/components/Hooks/SharProps"
 import { useContext } from "react"
 import {getWeatherApi} from '@/function'
 import { useTranslation } from "react-i18next"
-let InputGroupDemo=  
+const InputGroupDemo=  
 (e,setRes)=>{
 if(e.target.value.trim()){
 fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${e.target.value}&count=5&language=en&format=json&language=${localStorage.getItem("i18nextLng")||`en`}`)
@@ -30,16 +30,16 @@ id:null
 }
 
 export default function SearchBar(){
-let {res,setRes,setWetherProp,setCoordinates} = useContext(SharProps)
-let {t} = useTranslation()
+const {res,setRes,setWetherProp,setCoordinates} = useContext(SharProps)
+const {t} = useTranslation()
 return(
-<Command className={`w-1/2 lg:w-1/8 mx-2 text-white bg-black outline-2 rounded-2xl`}>
-    <InputGroup className="max-w-xs">
-      <InputGroupInput placeholder={t('search_placeholder')} onInput={(e)=>{InputGroupDemo(e,setRes)}} />
+<Command className={`w-2/5  flex justify-between mx-2 text-white bg-['#0B0F19']  rounded-2xl`}>
+    <InputGroup className="max-w-full self-center">
+      <InputGroupInput className='' placeholder={t('search_placeholder')} onInput={(e)=>{InputGroupDemo(e,setRes)}} />
       <InputGroupAddon>
         <Search />
       </InputGroupAddon>
-      <InputGroupAddon className={'m-2'} align="inline-end">{res.results[0].id?res.results.length:t('No')} {t('results')}</InputGroupAddon>
+      <InputGroupAddon className={''} align="inline-end">{res.results[0].id?res.results.length:t('No')} {t('results')}</InputGroupAddon>
     </InputGroup>
 {/*INPUT */
 /*
@@ -49,7 +49,7 @@ return(
 onInput={()=>{InputGroupDemo(setRes)}} />
     </Field>*/}
 <CommandGroup>
-<CommandList className={"max-h-17 overflow-scroll scroll-smooth "}>
+<CommandList className={"h-17 overflow-scroll scroll-smooth "}>
 {
 res?.results?.map((e,i)=>{  
     return (<CommandItem key={i}
@@ -70,7 +70,7 @@ getWeatherApi({latitude:e.latitude,longitude:e.longitude},setWetherProp)
 }}
 className={`cursor-pointer
 whitespace-nowrap
-my-2 transition-all text-center duration-1000 bg-black text-white `}>{e.name}{e.country?'-':``}{e.country}</CommandItem>)})}
+my-2 transition-all text-center duration-1000  text-white `}>{e.name}{e.country?'-':``}{e.country}</CommandItem>)})}
                             </CommandList>
                             </CommandGroup>
                     </Command>
