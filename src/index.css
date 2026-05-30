@@ -110,7 +110,14 @@
   --shadow-xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 8px 10px -1px hsl(0 0% 0% / 0.18);
   --shadow-2xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.45);
 }
-
+body{
+      background: 
+        radial-gradient(circle at 50% 50%, 
+          rgba(226, 232, 240, 0.2) 0%, 
+          rgba(226, 232, 240, 0.1) 25%, 
+          rgba(226, 232, 240, 0.05) 35%, 
+          transparent 50%),
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

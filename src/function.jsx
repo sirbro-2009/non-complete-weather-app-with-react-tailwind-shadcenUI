@@ -21,21 +21,25 @@ Sparkles,
 Sun,
 CloudRain
 } from "lucide-react";
+
 function getTime(){
 let date = new Date(Date.now())
 let day = date.getDate()
 let month = date.getMonth()+1
 let year = date.getFullYear()
+let hour = date.getHours()
 setInterval(() => {
 date = new Date(Date.now())
 day = date.getDate()
 month = date.getMonth()+1
 year = date.getFullYear()
+hour = date.getHours()
 }, 1000);
 return {
   day:day,
   month:month,
-  year:year
+  year:year,
+  theHour:hour
 }
 }
 let showAlertFunction = (setShowAlert)=>{
@@ -45,6 +49,7 @@ setShowAlert(false)
 }, 10000);
 
 }
+
 function fetchLocal(setShowAlert,setCoordinates,setWetherProp){
                       try{
                           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
@@ -141,11 +146,29 @@ const sunriseHour = parseInt(sunrise.split(":")[0])
 const sunriseMin = parseInt(sunrise.split(":")[1])
 const sunsetHour = parseInt(sunset.split(":")[0])
 const sunsetMin = parseInt(sunset.split(":")[1])
-if(hour >=sunriseHour  ){
+if((hour >sunriseHour  && hour <sunsetHour)||
+(hour === sunriseHour && min>sunriseMin)||
+(hour === sunsetHour && min<sunsetMin)
+){
 return true
 }
-if(hour <= sunsetHour){
+
+else{
 return false
+}
+}
+function editTime(time){
+  return time <10?time===0?12:`0${time}`:time
+}
+function amPm(e){
+
+const hour = parseInt(e.split("T")[1].split(":")[0])
+const min = e.split("T")[1].split(":")[1]
+return {
+  hour:`${hour>12?`${editTime(hour-12)}`:hour>=10?hour+"":`${editTime(hour)}`}`,
+  min:min,
+  type:hour>=12?"PM":"AM",
+  full_hour:`${hour>12?`${editTime(hour-12)}`:hour>=10?hour+"":`${editTime(hour)}`}`+`:${min}`
 }
 }
 function getWeatherApi(e,setWetherProp){
@@ -234,7 +257,9 @@ color:getTempColor(parseInt(e))
 time:data.hourly.time.map(e=>{
   return {
     hour:e.split("T")[1],
-    isDay:isDay(e,data.daily.sunrise[0].split("T")[1],data.daily.sunset[0].split("T")[1])
+    isDay:isDay(e,data.daily.sunrise[0].split("T")[1],data.daily.sunset[0].split("T")[1]),
+    am_pm:amPm(e),
+    is_now_time:getTime().theHour === parseInt(e.split("T")[1].split(":")[0])
   }
 }),
 /*weather state */
@@ -255,7 +280,7 @@ color:getHumidityColor(e)
 }
 }
 }
-console.log(object)
+console.log(object.more.hourly)
 setWetherProp(object)
 }).catch(()=>{
 setWetherProp({

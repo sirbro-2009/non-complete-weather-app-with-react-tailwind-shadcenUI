@@ -18,7 +18,7 @@ export default function SelectBar(){
     // قلب اتجاه الموقع تلقائياً (يمين لليسار للعربية، ويسار لليمين للإنجليزية)
     document.dir = selectedLang === 'ar' ? 'rtl' : 'ltr';
   }
-    return (<><NativeSelect className={`h-1/2 `}onChange={handleLanguageChange} value={i18n.language}> 
+    return (<><NativeSelect className={`h-1/2 self-center`}onChange={handleLanguageChange} value={i18n.language}> 
                                 <NativeSelectOption  disabled>{t('select-l')}</NativeSelectOption>
                                 <NativeSelectOption value="ar">العربية </NativeSelectOption>
                                 <NativeSelectOption value="en">English</NativeSelectOption>

@@ -71,12 +71,12 @@ catch(e){
 },[Coordinates])
 
 return (
-<>
+
 <SharProps.Provider value={{weatherProp,setWetherProp,Coordinates,setCoordinates,res,setRes,setShowAlert}}>
-<div className="min-h-screen bg-black w-full relative">
+<div className="w-full  min-h-screen bg-black  relative ">
   {/* Midnight Radial Glow Background */}
   <div
-    className="absolute inset-0 z-0"
+    className="absolute inset-0 z-0 w-full h-full"
     style={{
       background: `
         radial-gradient(circle at 50% 50%, 
@@ -89,7 +89,7 @@ return (
     }}
   />
   {/* Your Content/Components */}
-    <div className={` w-full  h-screen flex flex-col font-['Rubik']`}>
+    <div className={`relative z-10 w-full min-h-screen flex flex-col font-['Rubik']`}>
       <Header></Header>
     {showAlert?<AlertDestructive></AlertDestructive>:``}
       <TheBody></TheBody>
@@ -97,7 +97,7 @@ return (
 </div>
 
 </SharProps.Provider>
-</>
+
   )
 }
 

@@ -33,23 +33,16 @@ export default function SearchBar(){
 const {res,setRes,setWetherProp,setCoordinates} = useContext(SharProps)
 const {t} = useTranslation()
 return(
-<Command className={`w-2/5  flex justify-between mx-2 text-white bg-['#0B0F19']  rounded-2xl`}>
+<Command className={` w-full  flex text-center mx-2 text-white bg-['#0B0F19']  rounded-2xl`}>
     <InputGroup className="max-w-full self-center">
       <InputGroupInput className='' placeholder={t('search_placeholder')} onInput={(e)=>{InputGroupDemo(e,setRes)}} />
       <InputGroupAddon>
         <Search />
       </InputGroupAddon>
-      <InputGroupAddon className={''} align="inline-end">{res.results[0].id?res.results.length:t('No')} {t('results')}</InputGroupAddon>
+      <InputGroupAddon className={'hidden lg:block'} align="inline-end">{res.results[0].id?res.results.length:t('No')} {t('results')}</InputGroupAddon>
     </InputGroup>
-{/*INPUT */
-/*
-    <Field orientation="horizontal">
-      <Input type="search"  placeholder={t('search_placeholder')} autoFocus
-  className={`text-white text-center  rounded-lg text-2xl m-2`}
-onInput={()=>{InputGroupDemo(setRes)}} />
-    </Field>*/}
 <CommandGroup>
-<CommandList className={"h-17 overflow-scroll scroll-smooth "}>
+<CommandList className={"h-17  overflow-scroll scroll-smooth"}>
 {
 res?.results?.map((e,i)=>{  
     return (<CommandItem key={i}
@@ -70,6 +63,7 @@ getWeatherApi({latitude:e.latitude,longitude:e.longitude},setWetherProp)
 }}
 className={`cursor-pointer
 whitespace-nowrap
+w-full
 my-2 transition-all text-center duration-1000  text-white `}>{e.name}{e.country?'-':``}{e.country}</CommandItem>)})}
                             </CommandList>
                             </CommandGroup>
