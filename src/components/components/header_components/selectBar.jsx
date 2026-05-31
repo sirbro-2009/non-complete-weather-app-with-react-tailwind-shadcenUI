@@ -4,6 +4,9 @@ import {
 } from "@/components/ui/native-select"
 
 import { useTranslation } from 'react-i18next';
+if(!localStorage.getItem("i18nextLng")){
+  localStorage.setItem("i18nextLng","en")
+}
 export default function SelectBar(){
   const {t,  i18n } = useTranslation();
 
